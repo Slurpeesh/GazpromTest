@@ -97,7 +97,7 @@ export default function PaginationBlock() {
                 })}
                 isActive={item === currentPage}
                 onClick={() => pageSelectHandler()}
-                tabIndex={currentPage === item && -1}
+                tabIndex={currentPage === item ? -1 : undefined}
               >
                 {item}
               </PaginationLink>

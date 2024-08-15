@@ -4,6 +4,7 @@ import express from 'express'
 import fs from 'fs'
 import path from 'path'
 import { getPageNum } from './getPageNum'
+import { IData } from './types'
 
 const filePath = path.resolve(__dirname, 'article_def_v_orig.csv')
 const CHUNK_SIZE = 10
@@ -16,7 +17,7 @@ const app = express()
 
 app.use(cors())
 
-function processChunk(chunk: Array<any>) {
+function processChunk(chunk: Array<IData>) {
   for (let i = 0; i < chunk.length; i++) {
     chunk[i] = {
       articleid: chunk[i].articleid,
@@ -32,12 +33,12 @@ app.get('/', (req, res) => {
   const page = Number(req.query.page) ?? 1
   const startIndex = CHUNK_SIZE * page - CHUNK_SIZE
   const endIndex = startIndex + CHUNK_SIZE
-  let buffer: any[] = []
+  let buffer: Array<IData> = []
   let rowCount = 0
   const readStream = fs
     .createReadStream(filePath)
     .pipe(csvParser())
-    .on('data', (row) => {
+    .on('data', (row: IData) => {
       if (row.ecrlongname !== 'DO NOT USE') {
         if (rowCount >= startIndex && rowCount < endIndex) {
           buffer.push(row)
@@ -60,14 +61,19 @@ app.get('/', (req, res) => {
     })
     .on('error', (error) => {
       console.error('Error while reading CSV file:', error)
+      res.status(500)
     })
 })
 
 app.get('/pagesAmount', (req, res) => {
-  pagesAmount.then((num) => {
-    res.send({ pagesAmount: num })
-    res.status(200)
-  })
+  pagesAmount
+    .then((num) => {
+      res.send({ pagesAmount: num })
+      res.status(200)
+    })
+    .catch(() => {
+      res.status(500)
+    })
 })
 
 app.listen(PORT, () => {
