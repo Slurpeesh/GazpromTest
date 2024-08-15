@@ -6,10 +6,14 @@
   :root {
     --color-background: 0 0% 93%;
     --color-foreground: 222 47% 11%;
+    --color-accent: 242 47% 70%;
+    --color-muted: 242 30% 75%;
   }
 
   .dark {
     --color-background: 205 40% 10%;
     --color-foreground: 205 5% 90%;
+    --color-accent: 242 47% 40%;
+    --color-muted: 242 30% 25%;
   }
 }

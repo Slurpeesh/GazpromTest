@@ -16,7 +16,6 @@ export function getPageNum(
         }
       })
       .on('end', () => {
-        console.log(lineCount / itemsPerPage)
         resolve(Math.ceil(lineCount / itemsPerPage))
       })
       .on('error', (error) => {

@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from '@/app/hooks/useActions'
 import { cn } from '@/app/lib/utils'
 import { setPage } from '@/app/store/slices/currentPage'
+import { setLoading } from '@/app/store/slices/isLoading'
 import {
   Pagination,
   PaginationContent,
@@ -10,12 +11,15 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/entities/Pagination/Pagination'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export default function PaginationBlock() {
   const dispatch = useAppDispatch()
   const currentPage = useAppSelector((state) => state.currentPage.value)
   const totalPages = useAppSelector((state) => state.totalPages.value)
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const visiblePages = useMemo(() => {
     let arr: Array<number>
@@ -33,28 +37,39 @@ export default function PaginationBlock() {
     return arr
   }, [currentPage])
 
+  useEffect(() => {
+    const page = Number(location.pathname.slice(1))
+    dispatch(setPage(page))
+  }, [location])
+
   function previousPageHandler() {
     if (currentPage > 1) {
+      navigate(`${currentPage - 1}`)
       dispatch(setPage(currentPage - 1))
+      dispatch(setLoading(true))
     }
   }
 
   function nextPageHandler() {
     if (currentPage < totalPages) {
+      navigate(`${currentPage + 1}`)
       dispatch(setPage(currentPage + 1))
+      dispatch(setLoading(true))
     }
   }
 
   function pageSelectHandler(page: number) {
+    navigate(`${page}`)
     dispatch(setPage(page))
+    dispatch(setLoading(true))
   }
 
   return (
     <Pagination>
-      <PaginationContent>
+      <PaginationContent className="flex-wrap">
         <PaginationItem>
           <PaginationPrevious
-            className="hover:cursor-pointer hover:bg-slate-800"
+            className="hover:cursor-pointer hover:bg-muted"
             onClick={() => previousPageHandler()}
           />
         </PaginationItem>
@@ -62,8 +77,8 @@ export default function PaginationBlock() {
           <>
             <PaginationItem>
               <PaginationLink
-                className={cn('hover:bg-slate-800', {
-                  'bg-blue-900 hover:bg-blue-900': currentPage === 1,
+                className={cn('hover:bg-muted', {
+                  'bg-accent hover:bg-accent': currentPage === 1,
                 })}
                 onClick={() => pageSelectHandler(1)}
               >
@@ -76,13 +91,15 @@ export default function PaginationBlock() {
           </>
         )}
 
-        {visiblePages.map((item) => {
+        {visiblePages.map((item, index) => {
           return (
-            <PaginationItem>
+            <PaginationItem key={index}>
               <PaginationLink
-                className={cn('hover:bg-slate-800', {
-                  'bg-blue-900 hover:bg-blue-900': currentPage === item,
+                className={cn('hover:bg-muted', {
+                  'bg-accent hover:bg-accent pointer-events-none':
+                    currentPage === item,
                 })}
+                isActive={item === currentPage}
                 onClick={() => pageSelectHandler(item)}
               >
                 {item}
@@ -97,8 +114,8 @@ export default function PaginationBlock() {
             </PaginationItem>
             <PaginationItem>
               <PaginationLink
-                className={cn('hover:bg-slate-800', {
-                  'bg-blue-900 hover:bg-blue-900': currentPage === totalPages,
+                className={cn('hover:bg-muted', {
+                  'bg-accent hover:bg-accent': currentPage === totalPages,
                 })}
                 onClick={() => pageSelectHandler(totalPages)}
               >
@@ -110,7 +127,7 @@ export default function PaginationBlock() {
 
         <PaginationItem>
           <PaginationNext
-            className="hover:cursor-pointer hover:bg-slate-800"
+            className="hover:cursor-pointer hover:bg-muted"
             onClick={() => nextPageHandler()}
           />
         </PaginationItem>
