@@ -3,6 +3,7 @@ import * as React from 'react'
 
 import { cn } from '@/app/lib/utils'
 import { ButtonProps, buttonVariants } from '@/shared/Button/Button'
+import { Link } from 'react-router-dom'
 
 const Pagination = ({ className, ...props }: React.ComponentProps<'nav'>) => (
   <nav
@@ -36,16 +37,19 @@ PaginationItem.displayName = 'PaginationItem'
 
 type PaginationLinkProps = {
   isActive?: boolean
+  to: string
 } & Pick<ButtonProps, 'size'> &
   React.ComponentProps<'a'>
 
 const PaginationLink = ({
   className,
   isActive,
+  to,
   size = 'icon',
   ...props
 }: PaginationLinkProps) => (
-  <a
+  <Link
+    to={to}
     aria-current={isActive ? 'page' : undefined}
     className={cn(
       'hover:cursor-pointer',
