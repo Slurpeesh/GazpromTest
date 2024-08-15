@@ -1,17 +1,12 @@
-# Используем базовый образ Node.js
-FROM node:20
+FROM node
 
-# Устанавливаем рабочую директорию
 WORKDIR /app
 
-# Копируем package.json и package-lock.json
-COPY package*.json ./
-
-# Устанавливаем зависимости
+COPY package.json .
 RUN npm install
 
-# Копируем остальные файлы проекта
 COPY . .
 
-# Указываем команду по умолчанию для выполнения при запуске контейнера
-CMD ["npm", "run", "setup"]
+EXPOSE 5000
+
+CMD ["npm", "start"]

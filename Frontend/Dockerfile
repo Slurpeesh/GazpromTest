@@ -1,20 +1,21 @@
-# Используем базовый образ Node.js
-FROM node:20
+FROM node:20 AS build
 
-# Устанавливаем рабочую директорию
-WORKDIR /app
-
-# Копируем package.json и package-lock.json
-COPY package*.json ./
-
-# Устанавливаем зависимости
+# Install app dependencies
+COPY package.json package.json
 RUN npm install
 
-# Копируем остальные файлы проекта
+# Bundle app source
 COPY . .
 
-# Сборка проекта
 RUN npm run build:prod
 
-# Указываем команду по умолчанию для выполнения при запуске контейнера
-CMD ["npm", "run", "start"]
+FROM nginx
+
+COPY --from=build /build /usr/share/nginx/html
+COPY --from=build nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port
+EXPOSE 3000
+
+# Default command to run
+CMD ["nginx", "-g", "daemon off;"]
