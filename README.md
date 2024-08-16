@@ -1,5 +1,17 @@
 # TableViewer
 
+## Стек
+![TypeScript Badge](https://img.shields.io/badge/TypeScript-informational?style=for-the-badge&logo=typescript&labelColor=rgb(30,30,46)&color=rgb(30,30,46))
+![React Badge](https://img.shields.io/badge/React-informational?style=for-the-badge&logo=react&labelColor=rgb(30,30,46)&color=rgb(30,30,46))
+![React_Router Badge](https://img.shields.io/badge/React_Router-informational?style=for-the-badge&logo=react-router&labelColor=rgb(30,30,46)&color=rgb(30,30,46))
+![Webpack Badge](https://img.shields.io/badge/Webpack-informational?style=for-the-badge&logo=webpack&labelColor=rgb(30,30,46)&color=rgb(30,30,46))
+![Tailwind Badge](https://img.shields.io/badge/Tailwind_CSS-informational?style=for-the-badge&logo=tailwind-css&labelColor=rgb(30,30,46)&color=rgb(30,30,46))
+![Redux Badge](https://img.shields.io/badge/Redux-informational?style=for-the-badge&logo=redux&labelColor=rgb(30,30,46)&color=rgb(30,30,46)&logoColor=rgb(118,74,188))
+![NodeJS Badge](https://img.shields.io/badge/Node.JS-informational?style=for-the-badge&logo=node.js&labelColor=rgb(30,30,46)&color=rgb(30,30,46))
+![Express.js Badge](https://img.shields.io/badge/Express.JS-informational?style=for-the-badge&logo=express&labelColor=rgb(30,30,46)&color=rgb(30,30,46)&logoColor=%2361DAFB)
+![Docker Badge](https://img.shields.io/badge/Docker-informational?style=for-the-badge&logo=docker&labelColor=rgb(30,30,46)&color=rgb(30,30,46))
+![Nginx Badge](https://img.shields.io/badge/Nginx-informational?style=for-the-badge&logo=nginx&labelColor=rgb(30,30,46)&color=rgb(30,30,46)&logoColor=%23009639)
+
 ## Инструкция по конфигурации проекта
 После клонирования репозитория необходимо для обоих директорий Frontend и Backend выполнить команду `npm i` в терминале. Далее необходимо разместить CSV файл по пути `./Backend/src/`.
 
