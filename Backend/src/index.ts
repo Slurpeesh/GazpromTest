@@ -3,6 +3,7 @@ import csvParser from 'csv-parser'
 import express from 'express'
 import fs from 'fs'
 import path from 'path'
+import stream from 'stream'
 import { getPageNum } from './getPageNum'
 import { IData } from './types'
 
@@ -30,12 +31,23 @@ function processChunk(chunk: Array<IData>) {
 }
 
 app.get('/', (req, res) => {
-  const page = Number(req.query.page) ?? 1
+  const page = Number(req.query.page) || 1
   const startIndex = CHUNK_SIZE * page - CHUNK_SIZE
   const endIndex = startIndex + CHUNK_SIZE
   let buffer: Array<IData> = []
   let rowCount = 0
-  const readStream = fs
+  let readStream: stream.Transform
+
+  req.on('close', () => {
+    if (!res.writableEnded) {
+      console.log('Request was canceled by the client')
+      if (readStream) {
+        readStream.destroy()
+      }
+    }
+  })
+
+  readStream = fs
     .createReadStream(filePath)
     .pipe(csvParser())
     .on('data', (row: IData) => {
@@ -47,21 +59,20 @@ app.get('/', (req, res) => {
 
         if (rowCount === endIndex) {
           processChunk(buffer)
-          readStream.destroy() // Прекращение чтения после обработки первых 20 строк
+          readStream.destroy()
         }
       }
     })
     .on('close', () => {
       if (buffer.length > 0 && rowCount < endIndex) {
-        processChunk(buffer) // обработка оставшихся строк, если их меньше 20
+        processChunk(buffer)
       }
       console.log('CSV file successfully processed')
-      res.json(buffer)
-      res.status(200)
+      res.status(200).json(buffer)
     })
     .on('error', (error) => {
       console.error('Error while reading CSV file:', error)
-      res.status(500)
+      res.status(500).end()
     })
 })
 

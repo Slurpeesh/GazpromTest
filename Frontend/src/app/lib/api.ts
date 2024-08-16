@@ -3,8 +3,17 @@ import { Data } from '../config/columns'
 const URL =
   process.env.NODE_ENV === 'development' ? 'http://localhost:5000' : '/api'
 
+let controller: AbortController | null = null
+
 export async function getData(page: number): Promise<Data[]> {
-  const response = await fetch(`${URL}/?page=${page}`)
+  if (controller) {
+    controller.abort()
+  }
+
+  controller = new AbortController()
+  const signal = controller.signal
+
+  const response = await fetch(`${URL}/?page=${page}`, { signal })
   const data = await response.json()
   return data
 }
