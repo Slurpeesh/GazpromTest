@@ -3,15 +3,10 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks/useActions'
 import { getData } from '@/app/lib/api'
 import { setLoading } from '@/app/store/slices/isLoading'
 import LoaderSvg from '@/entities/LoaderSvg/LoaderSvg'
+import { LoaderData } from '@/global'
 import { DataTable } from '@/widgets/DataTable/DataTable'
 import { useEffect } from 'react'
 import { LoaderFunction, useLoaderData } from 'react-router-dom'
-
-export type LoaderData<TLoaderFn extends LoaderFunction> = Awaited<
-  ReturnType<TLoaderFn>
-> extends Response | infer D
-  ? D
-  : never
 
 export const tableLoader = (async ({ params }: any) => {
   const data = await getData(params.pageId)

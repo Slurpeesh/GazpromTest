@@ -1,4 +1,5 @@
 import ThemeButton from '@/features/ThemeButton/ThemeButton'
+import { LoaderData } from '@/global'
 import PaginationBlock from '@/widgets/PaginationBlock/PaginationBlock'
 import { useEffect } from 'react'
 import {
@@ -10,38 +11,26 @@ import {
 } from 'react-router-dom'
 import { useAppDispatch } from './hooks/useActions'
 import { getPagesAmount } from './lib/api'
-import { setPage } from './store/slices/currentPage'
 import { setTotalPages } from './store/slices/totalPages'
 
-export type LoaderData<TLoaderFn extends LoaderFunction> = Awaited<
-  ReturnType<TLoaderFn>
-> extends Response | infer D
-  ? D
-  : never
-
 export const initLoader = (async () => {
-  const totalPages = await getPagesAmount()
-  const numTotalPages = totalPages.pagesAmount
-  return { numTotalPages }
+  const pagesAmount = await getPagesAmount()
+  return { pagesAmount }
 }) satisfies LoaderFunction
 
 export default function App() {
-  const { numTotalPages } = useLoaderData() as LoaderData<typeof initLoader>
+  const { pagesAmount } = useLoaderData() as LoaderData<typeof initLoader>
   const location = useLocation()
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
   useEffect(() => {
-    dispatch(setTotalPages(numTotalPages))
+    dispatch(setTotalPages(pagesAmount))
     const initPage = Number(location.pathname.slice(1))
     if (initPage < 1 || Number.isNaN(initPage)) {
       navigate(`1`, { replace: true })
-      dispatch(setPage(1))
-    } else if (initPage > numTotalPages) {
-      navigate(`${numTotalPages}`, { replace: true })
-      dispatch(setPage(numTotalPages))
-    } else {
-      dispatch(setPage(initPage))
+    } else if (initPage > pagesAmount) {
+      navigate(`${pagesAmount}`, { replace: true })
     }
   }, [])
   return (

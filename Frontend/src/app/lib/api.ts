@@ -9,8 +9,8 @@ export async function getData(page: number): Promise<Data[]> {
   return data
 }
 
-export async function getPagesAmount() {
+export async function getPagesAmount(): Promise<number> {
   const response = await fetch(`${URL}/pagesAmount`)
-  const data = await response.json()
-  return data
+  const { pagesAmount } = await response.json()
+  return pagesAmount
 }
