@@ -12,6 +12,9 @@
 ![Docker Badge](https://img.shields.io/badge/Docker-informational?style=for-the-badge&logo=docker&labelColor=rgb(30,30,46)&color=rgb(30,30,46))
 ![Nginx Badge](https://img.shields.io/badge/Nginx-informational?style=for-the-badge&logo=nginx&labelColor=rgb(30,30,46)&color=rgb(30,30,46)&logoColor=%23009639)
 
+## Скриншоты
+![](https://imgur.com/DpKrhMp)
+
 ## Инструкция по конфигурации проекта
 После клонирования репозитория необходимо для обоих директорий Frontend и Backend выполнить команду `npm i` в терминале. Далее необходимо разместить CSV файл по пути `./Backend/src/`.
 
